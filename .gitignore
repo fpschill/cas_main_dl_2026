@@ -9,3 +9,7 @@ data/
 *.gif
 celeba_gan/
 keras/
+private/
+.cc-history/
+.vscode/
+
