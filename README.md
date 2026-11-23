@@ -93,6 +93,6 @@ In the Notebook, click on this link to open it in Colab directly: ![Open in Cola
 
 Or, if you have forked the repository, you can run a notebook directly in Google Colab by using a link like this:
 
-https://colab.research.google.com/github/(YOUR_GITHUB_ID)/cas_main_dl_2026/blob/master/01_mnist.ipynb
+https://colab.research.google.com/github/(YOUR_GITHUB_ID)/cas_main_dl_2026/blob/main/01_mnist.ipynb
 
 Colab comes with PyTorch and Keras 3 preinstalled. Since the backend is set in the first cell of each notebook, no further setup is needed.
