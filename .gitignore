@@ -1,0 +1,11 @@
+logs/
+matlab/
+matlab.zip
+data.zip
+data/
+.ipynb_checkpoints/
+*.h5
+*.png
+*.gif
+celeba_gan/
+keras/
