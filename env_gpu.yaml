@@ -12,6 +12,11 @@ dependencies:
   - libblas=*=*openblas
   - pip:
     # PyTorch with CUDA 13.2 (CUDA and cuDNN come with the wheels, only an NVIDIA driver >= 595 is needed)
+    # The cu132 wheels only support GPUs with compute capability >= 7.5 (Turing and newer).
+    # For older GPUs (e.g. Pascal: Tesla P40/P100, GTX 10xx; Volta: V100) use cu126 instead,
+    # which supports sm_50 to sm_90 (but not Blackwell sm_100/sm_120), i.e. change the URL to
+    #   https://download.pytorch.org/whl/cu126
+    # (needs an NVIDIA driver >= 560)
     - --extra-index-url https://download.pytorch.org/whl/cu132
     - torch==2.14.1
     - torchvision==0.29.1
