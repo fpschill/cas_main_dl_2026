@@ -10,4 +10,5 @@ data/
 celeba_gan/
 .cc-history/
 .vscode/
-
+dev/
+.venv/
