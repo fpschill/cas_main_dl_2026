@@ -1,0 +1,69 @@
+# uv setup (same packages as env.yaml / env_gpu.yaml)
+#   uv sync --extra gpu      creates .venv with PyTorch for NVIDIA GPUs (CUDA 13.2, Linux and Windows)
+#   uv sync --extra cpu      creates .venv with PyTorch for CPU only (also macOS with Apple Silicon)
+#   uv run jupyter lab       starts Jupyter in this environment
+[project]
+name = "cas-main-dl-2026"
+version = "0.1.0"
+description = "ZHAW CAS Foundations of AI and Machine Learning, module Deep Learning (Keras 3 with PyTorch backend)"
+requires-python = "==3.12.*"
+dependencies = [
+    "jupyterlab",
+    "jupyterlab-widgets",
+    "ipywidgets",
+    "matplotlib",
+    # Keras 3, used with the PyTorch backend (KERAS_BACKEND=torch)
+    "keras==3.15.1",
+    "tensorboard",
+    "scikit-image==0.26.0",
+    "scikit-learn==1.9.1",
+    "numpy==2.5.5",
+    "tqdm",
+    "pandas",
+    "wget",
+    "gdown",
+    "opencv-python",
+]
+
+# PyTorch: choose one of the two with --extra cpu or --extra gpu
+[project.optional-dependencies]
+cpu = ["torch==2.14.1", "torchvision==0.29.1"]
+gpu = ["torch==2.14.1", "torchvision==0.29.1"]
+
+[tool.uv]
+# only notebooks, no Python package to build and install
+package = false
+conflicts = [[{ extra = "cpu" }, { extra = "gpu" }]]
+# Linux, Windows and macOS with Apple Silicon (PyTorch has no wheels for macOS on Intel)
+environments = [
+    "sys_platform == 'linux'",
+    "sys_platform == 'win32'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
+
+# on macOS, torch comes from PyPI (CPU and Apple MPS)
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { index = "pytorch-cu132", extra = "gpu", marker = "sys_platform != 'darwin'" },
+]
+torchvision = [
+    { index = "pytorch-cpu", extra = "cpu", marker = "sys_platform != 'darwin'" },
+    { index = "pytorch-cu132", extra = "gpu", marker = "sys_platform != 'darwin'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+# PyTorch with CUDA 13.2 (CUDA and cuDNN come with the wheels, only an NVIDIA driver >= 595 is needed).
+# The cu132 wheels only support GPUs with compute capability >= 7.5 (Turing and newer).
+# For older GPUs (e.g. Pascal: Tesla P40/P100, GTX 10xx; Volta: V100) use cu126 instead,
+# which supports sm_50 to sm_90 (but not Blackwell sm_100/sm_120), i.e. change the URL to
+#   https://download.pytorch.org/whl/cu126
+# (needs an NVIDIA driver >= 560) and run `uv lock` again.
+[[tool.uv.index]]
+name = "pytorch-cu132"
+url = "https://download.pytorch.org/whl/cu132"
+explicit = true

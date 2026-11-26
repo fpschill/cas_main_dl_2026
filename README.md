@@ -19,7 +19,7 @@ The notebooks use **Keras 3** with the **PyTorch backend**.
 
 TensorFlow is not needed.
 
-## Install Miniforge (recommended)
+## Setup with Conda/Miniforge (recommended)
 
 We recommend [Miniforge](https://github.com/conda-forge/miniforge) as the conda distribution. It is a minimal installer that uses the community-driven conda-forge channel by default and includes `conda` and `mamba`. If you already have a working conda installation, you can skip this step.
 
@@ -42,15 +42,15 @@ Check the installation with
 
 	conda --version
 
-## Automatic Environment Setup
+### Automatic Environment Setup
 
-### CPU
+#### CPU
 
 	conda env create -f env.yaml
 
 This creates the conda environment "cas_main_dl" and installs the packages listed in "env.yaml" (CPU only). This also works on macOS 14 (Sonoma) or newer with Apple Silicon.
 
-### GPU (NVIDIA)
+#### GPU (NVIDIA)
 
 	conda env create -f env_gpu.yaml
 
@@ -76,6 +76,30 @@ Check that the GPU is found:
 	pip install keras==3.15.1 tensorboard notebook matplotlib pandas tqdm ipywidgets scikit-learn scikit-image wget gdown opencv-python
 
 Official PyTorch installation instructions: https://pytorch.org/get-started/locally/
+
+## Setup with uv (alternative to conda)
+
+Instead of conda, you can create the environment with [uv](https://docs.astral.sh/uv/getting-started/installation/). In the repository folder run either
+
+	# CPU only (also macOS 14 or newer with Apple Silicon)
+	uv sync --extra cpu
+
+or
+
+	# NVIDIA GPU (CUDA 13.2, Linux and native Windows, NVIDIA driver 595 or newer)
+	uv sync --extra gpu
+
+This creates the environment in the folder `.venv` with the packages from `pyproject.toml` (the same as in `env.yaml` / `env_gpu.yaml`, with the exact versions from `uv.lock`). uv also downloads Python 3.12 if needed. Always add `--extra cpu` or `--extra gpu` when you run `uv sync`: without it, PyTorch is removed from the environment.
+
+Start Jupyter with
+
+	uv run jupyter lab
+
+or select the `.venv` environment as kernel in VS Code. With the GPU version, check that the GPU is found:
+
+	uv run python -c "import torch; print(torch.cuda.is_available())"
+
+
 
 ## Keras backend
 
